@@ -4,7 +4,8 @@ import { systemInstruction } from '../config/systemInstruction'
 export async function askTutor(messages, question) {
   const key = import.meta.env.VITE_GEMINI_API_KEY
   if (!key) throw new Error('Configura VITE_GEMINI_API_KEY en .env.local')
-  const model = new GoogleGenerativeAI(key).getGenerativeModel({ model: 'gemini-3-flash-preview', systemInstruction })
+  const modelName = import.meta.env.VITE_GEMINI_MODEL?.trim() || 'gemini-3-flash-preview'
+  const model = new GoogleGenerativeAI(key).getGenerativeModel({ model: modelName, systemInstruction })
   const history = []
   // Only completed user/model pairs belong in Gemini's alternating history.
   for (let i = 0; i < messages.length - 1; i++) {

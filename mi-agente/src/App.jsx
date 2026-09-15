@@ -72,7 +72,9 @@ export default function App() {
       catch (error) { console.warn('No se pudo guardar en Supabase:', error?.message || error); setNotice('La respuesta llegó, pero no se pudo guardar en la nube.') }
     } catch (error) {
       console.error('Error de Gemini:', error?.message || error)
-      setNotice('No se pudo responder. Tu pregunta se conservó; vuelve a enviarla para reintentar.')
+      setNotice(error?.status === 503 || /\b503\b/.test(error?.message || '')
+        ? 'Gemini está temporalmente saturado. Intenta nuevamente en unos segundos.'
+        : 'No se pudo responder. Tu pregunta se conservó; vuelve a enviarla para reintentar.')
       setDraft(question)
     } finally { busyRef.current = false; setBusyId(null) }
   }
